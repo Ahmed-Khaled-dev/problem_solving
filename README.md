@@ -1,1 +1,1 @@
-## 📒 This is for documenting my code solutions for all the problems that i solve [Code forces's](https://codeforces.com/profile/Akayiz) problems/[acmASCIS's](https://www.facebook.com/acmASCIS) Sheets problems
+## 📒 This is for documenting my code solutions for all the problems that i solve on [Code forces's](https://codeforces.com/profile/Akayiz) problems/[acmASCIS's](https://www.facebook.com/acmASCIS) Sheets problems
