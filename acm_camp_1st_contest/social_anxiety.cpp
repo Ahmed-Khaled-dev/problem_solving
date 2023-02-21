@@ -1,51 +1,64 @@
-/**
-*    author:  Akayiz
-*    created: 2023-02-12 22:47:17
-**/
-
 #include <iostream>
-#include <map>
+#include <vector>
 
 using namespace std;
 
-void fast(void) {
-     ios::sync_with_stdio(0);
-     cin.tie(0);
-     cout.tie(0);
-}
+// START OF CODEEEEE
+const int N = 3e5+2;
 
-map<int, int> apps;
+bool vis[N];
+int n, q, unread = 0, id=1, lastT = 1;
+vector<int> a[N];
 
-int main() {
-    fast();
-
-    int apps_count, events_count, event_type, x;
-    long long total_notifications = 0;
-    cin >> apps_count >> events_count;
-
-    for (int i = 0; i < events_count; i++)
+int main()
+{
+    cin>>n>>q;
+    while(q--)
     {
-        cin >> event_type;
-        switch (event_type)
-        {
-        case 1:
-            cin >> x;
-            total_notifications++;
-            break;
-        case 2:
-            cin >> x;
-            total_notifications -= apps[x];
-            apps[x] = 0;
-            break;
-        case 3:
-            cin >> x;
-            total_notifications -= x;
-            break;
-        }
+        int op;
+        cin>>op;
 
-        cout << total_notifications << endl;
+        if(op == 1)
+        {
+            int x;cin>>x;
+
+            a[x].push_back(id);
+
+            unread++;
+            id++;
+        }
+        else if(op == 2)
+        {
+            int x;cin>>x;
+
+            for(int i=0;i<a[x].size();i++)
+            {
+                int ntfID = a[x][i];
+
+                if(!vis[ntfID])
+                {
+                    vis[ntfID] = 1;
+                    unread--;
+                }
+            }
+
+            a[x].clear();
+        }
+        else
+        {
+            int t;cin>>t;
+
+            for(int i=lastT;i<=t;i++)
+            {
+                if(!vis[i])
+                {
+                    vis[i] = 1;
+                    unread--;
+                }
+            }
+            lastT = max(lastT, t);
+        }
+        cout<<unread<<endl;
     }
-    
-    
     return 0;
 }
