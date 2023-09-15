@@ -1,6 +1,6 @@
 /**
 *    author:  Akayiz
-*    created: 2023-09-12 23:45:00
+*    created: 2023-09-15 15:39:17
 **/
 
 #include <bits/stdc++.h>
@@ -12,39 +12,47 @@ typedef long long ll;
 
 using namespace std;
 
-// States: dp[movies_count][day_number]
-// Definition: Returns the maximum entertainment value that can be obtained whil i can see from day 1 -> day_number, 
-// without exceeding movies_count
-// Base cases: dp[movies_count][0] = 0
-// Transition:  dp[movies_count][day_number] = max(dp[movies_count - 1][day_number - 1], dp[movies_count][day_number - 1])
-
-ll values[200005];
-ll dp[200005];
+ll movies[200005];
 
 int main() {
     Akayiz
 
-    int t;
+    ll t;
     cin >> t;
 
-    while(t--){
-        ll days, max_movies, loss;
-        cin >> days >> max_movies >> loss;
+    ll days, max_movies, d;
 
-        for (int i = 0; i < days; i++)
+    while(t--){
+        cin >> days >> max_movies >> d;
+        
+        for (ll i = 0; i < days; i++)
         {
-            cin >> values[i];
+            cin >> movies[i];
+        }
+
+        ll ans = 0, sum = 0;
+        multiset<ll> seen_movies = {};
+
+        for (ll i = 0; i < days; i++)
+        {   
+            if(movies[i] > 0)
+            {
+                sum += movies[i];
+                //cout << "sum = " << sum << endl;
+                ans = max(ans, sum - ((i + 1) * d));
+                //cout << "ans = " << ans << endl;
+
+                seen_movies.insert(movies[i]);
+                
+                if(seen_movies.size() == max_movies){
+                    //cout << "Set begin = " << *seen_movies.begin() << endl;
+                    sum -= *seen_movies.begin();
+                    seen_movies.erase(seen_movies.begin());
+                }
+            }
         }
         
-        dp[max_movies] = 0;
-        dp[max_movies - 1] = 0;
-        for (int i = 1; i < days; i++)
-        {
-            dp[max_movies] = max(dp[max_movies - 1], dp[max_movies]);
-            dp[max_movies - 1] = max(dp[max_movies - 1], dp[max_movies]) + values[i];
-        }
-
-        cout << dp[0] << endl;
+        cout << ans << el;
     }
 
     return 0;
