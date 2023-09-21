@@ -31,8 +31,6 @@ int main() {
         }
     }
     
-    sort(bigger_chars, bigger_chars + 27);
-    
     int k;
     for (int i = 0; i < n; i++)
     {
