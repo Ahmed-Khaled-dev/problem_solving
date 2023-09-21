@@ -1,73 +1,69 @@
 /**
 *    author:  Akayiz
-*    created: 2023-04-08 02:18:35
+*    created: 2023-09-19 16:14:45
 **/
 
-#include <iostream>
-#include <cstring>
-#include <vector>
+#include <bits/stdc++.h>
+
+#define el '\n'
+#define Akayiz ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+
+typedef long long ll;
 
 using namespace std;
 
-void fast(void) {
-     ios::sync_with_stdio(0);
-     cin.tie(0);
-     cout.tie(0);
-}
-
-const int MAX = 1e5;
-int spf[MAX];
+ll arr[100005];
+int spf[1000005];
 
 void seive_spf(int n){
-    for (int i = 0; i <= n; i++)
+    spf[1] = 1;
+    for (int i = 2; i <= n; i++)
     {
         spf[i] = i;
     }
-
-    for (int i = 2; i <= n; i+=2)
+    
+    for (int i = 2; i*i <= n; i++)
     {
-        spf[i] = 2;
-    }
-
-    for (int i = 3; i*i <= n; i++)
-    {
-        if (spf[i] == i)
-        {
+        if(spf[i] == i){
             for (int j = i*i; j <= n; j+=i)
             {
-                if (spf[j] == j)
-                {
+                if(spf[j] == j)
                     spf[j] = i;
-                }
             }
         }
     }
 }
 
-vector<int> prime_factors;
-
-void prime_fact_optimized(int n){
-    while (n != 1)
-    {
-        prime_factors.push_back(spf[n]);
-        //cout << "True prime factor: " << spf[n] << endl;
-        n /= spf[n];
-    }
-}
-
 int main() {
-    fast();
+    Akayiz
 
     int n;
     cin >> n;
-    seive_spf(n);
-    prime_fact_optimized(n);
 
-    for (int i = 0; i < prime_factors.size(); i++)
+    for (int i = 0; i < n; i++)
     {
-        cout << prime_factors[i] << endl;
+        cin >> arr[i];
     }
     
+    seive_spf(1000002);
 
+    // for (int i = 2; i < n; i++)
+    // {
+    //     cout << i << " " << spf[i] << endl;
+    // }
+
+    for (int i = 0; i < n; i++)
+    {
+        if((sqrt(arr[i]) == (int) sqrt(arr[i])) && arr[i] != 1)
+        {
+            if(spf[(int) sqrt(arr[i])] == sqrt(arr[i]))
+                cout << "YES" << el;
+            else
+                cout << "NO" << el;
+        }
+        else
+            cout << "NO" << el;
+    }
+    
     return 0;
 }
