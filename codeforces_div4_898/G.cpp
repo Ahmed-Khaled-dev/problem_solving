@@ -21,68 +21,32 @@ int main() {
     string s;
     while(t--){
         cin >> s;
+        map<char, int> freq = {};
+        bool consequtive_bs = 0;
+        int consequtive_as = 0, min_consequtive_as = 1e8;
 
-        bool found_b = 0, found_a = 0;
-        ll coins = 0, ans = 0;
         for (int i = 0; i < s.size(); i++)
         {
-            if(s[i] == 'B'){
-                found_b = 1;
-            }
-            else if(found_b){
-                coins++;
-            }
-        }
-
-        //cout << coins << el;
-        ans = max(ans, coins);
-
-        reverse(s.begin(), s.end());
-        
-        found_b = 0, found_a = 0;
-        coins = 0;
-        for (int i = 0; i < s.size(); i++)
-        {
-            if(s[i] == 'B'){
-                found_b = 1;
-            }
-            else if(found_b){
-                coins++;
-            }
-        }
-
-        //cout << coins << el;
-        ans = max(ans, coins);
-
-        found_b = 0, found_a = 0;
-        coins = 0;
-        for (int i = 0; i < s.size(); i++)
-        {
-            if(s[i] == 'B'){
-                found_b = 1;
-                if(found_a)
-                {
-                    found_a = 0;
-                    found_b = 0;
-                    coins++;
-                } 
+            freq[s[i]]++;
+            if(s[i] == 'B')
+            {
+                if(s[i] == s[i + 1])
+                    consequtive_bs = 1;
+                
+                min_consequtive_as = min(min_consequtive_as, consequtive_as);
+                consequtive_as = 0;
             }
             else
-            {
-                found_a = 1;
-                if(found_b)
-                {
-                    found_b = 0;
-                    found_a = 0;
-                    coins++;
-                }
-            }
+                consequtive_as++;
         }
-
-        //cout << coins << el;
-        ans = max(ans, coins);
-
-        cout << ans << el;
+        min_consequtive_as = min(min_consequtive_as, consequtive_as);
+        
+        if(s[0] == 'B' || s[s.size() - 1] == 'B')
+            cout << freq['A'] << el;
+        else if(consequtive_bs)
+            cout << freq['A'] << el;
+        else
+            cout << freq['A'] - min_consequtive_as << el;
     }
 
     return 0;

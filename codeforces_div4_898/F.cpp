@@ -12,8 +12,8 @@ typedef long long ll;
 
 using namespace std;
 
-int fruits[200005];
-ll heights[200005];
+ll fruits[200010];
+ll heights[200010];
 
 int main() {
     Akayiz
@@ -33,56 +33,41 @@ int main() {
             cin >> heights[i];
         }
 
-        ll ans = 0, current_fruits = 0, current_length = 0, first_in_sub_array_idx = 2e5 + 1;
+        ll ans = 0, current_fruits = 0, current_length = 0, first_in_sub_array_idx = 2e5 + 5;
+        heights[n] = 1;
 
-        for (ll i = 0; i < n - 1; i++)
+        for (int i = 0; i < n; i++)
         {
-            //cout << ans << " " << current_fruits << " " << current_length << el;
-            if((heights[i] % heights[i + 1] == 0))
-            {
+            if(heights[i] % heights[i + 1] == 0){
+                while(current_fruits + fruits[i] > max_fruits && current_length > 0)
+                {
+                    current_length--;
+                    current_fruits -= fruits[first_in_sub_array_idx];
+                    first_in_sub_array_idx++;
+                }
                 if(current_fruits + fruits[i] <= max_fruits)
                 {
-                    if(current_fruits == 0)
+                    if(current_length == 0)
                         first_in_sub_array_idx = i;
-                    current_fruits += fruits[i];
                     current_length++;
-                }
-                else
-                {
-                    if((current_fruits - fruits[first_in_sub_array_idx] + fruits[i]) <= max_fruits)
-                    {
-                        current_fruits -= fruits[first_in_sub_array_idx];
-                        current_fruits += fruits[i];
-                        first_in_sub_array_idx = first_in_sub_array_idx + 1;
-                    }
+                    current_fruits += fruits[i];
+                    ans = max(ans, current_length);
                 }
             }
             else
             {
-                if(fruits[i] + current_fruits <= max_fruits){
+                if(current_fruits + fruits[i] <= max_fruits)
                     current_length++;
-                }
+                
                 ans = max(ans, current_length);
-                current_length = 0;
                 current_fruits = 0;
-                first_in_sub_array_idx = 2e5 + 1;
+                current_length = 0;
+                first_in_sub_array_idx = 2e5 + 5;
             }
         }
-
-        if(current_fruits != 0){
-            if(fruits[n - 1] + current_fruits <= max_fruits)
-                current_length++;
-        }
-        else
-        {
-            if(fruits[n - 1] <= max_fruits)
-                current_length++;
-        }
-
+        
         ans = max(ans, current_length);
-
         cout << ans << el;
     }
-
     return 0;
 }
