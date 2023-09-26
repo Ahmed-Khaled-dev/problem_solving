@@ -1,6 +1,6 @@
 /**
 *    author:  Akayiz
-*    created: 2023-09-20 18:07:51
+*    created: 2023-09-26 14:01:44
 **/
 
 #include <bits/stdc++.h>
@@ -12,58 +12,52 @@ typedef long long ll;
 
 using namespace std;
 
-// Weight, Value
-pair<int, int> boxes[100005] = {};
+int weights[100005];
+int values[100005];
 
-int total_boxes_count = 0;
+// States: dp[idx][weight]
+// Definition: Returns the maximum value that can be obtained while i can see from 1 -> idx, while not exceeding the weight
+// Base cases: dp[-idx][weight] = 0, dp[idx][0] = -inf
+// Transition: dp[idx][weight] = max(dp[idx - 1][weight], dp[idx - 1][weight - w[i]] + v[i])
 
-int dp[100005][1005] = {};
-
-// States : dp[i][remaining_weight]
-
-// Definition : It returns the maximum sum of values that can be taken from a[i] -> a[n - 1] 
-// without exceeding the remaining weight
-
-// Base cases : dp[i][0] = 0, dp[n][remaining_weight] = 0, dp[i][-ve] = -infinity
-
-// Transition : dp[i][remaining_weight] = max(dp[i + 1][remaining_weight], dp[i + 1][remaining_weight - w[i]] + v[i])
-
-// Answer : dp[0][initial_weight]
-
-int maximum_sum_of_values(int idx, int remaining_weight){
-    for (int i = total_boxes_count - 1; i >= 0; i--)
-    {
-        for (int weight = 0; weight <= remaining_weight; weight++)
-        {
-            if (weight >= boxes[i].first)
-                dp[i][weight] = max(dp[i + 1][weight], dp[i + 1][weight - boxes[i].first] + boxes[i].second);
-            else
-                dp[i][weight] = dp[i + 1][weight];
-        }
-    }
-
-    return dp[idx][remaining_weight];
-}
+int dp[100005][1005];
 
 int main() {
     Akayiz
 
-    int initial_weight, items_count;
-    cin >> items_count >> initial_weight;
+    int types, max_weight;
+    cin >> types >> max_weight;
 
-    int boxes_count, weight, value;
-    while(items_count--){
-        cin >> boxes_count;
-        cin >> weight >> value;
-        for (int i = total_boxes_count; i < total_boxes_count + boxes_count; i++)
-        {
-            boxes[i].first = weight;
-            boxes[i].second = value;
+    int boxes, weight, value;
+    int items = 1;
+    while(types--)
+    {
+        cin >> boxes >> weight >> value;
+        while(boxes--){
+            weights[items] = weight;
+            values[items] = value;
+            items++;
         }
-        total_boxes_count += boxes_count;
     }
     
-    cout << maximum_sum_of_values(0, initial_weight);
+    for (int w = 1; w < 1002; w++)
+    {
+        dp[0][w] = 0;
+    }
+    
+    items--;
+    for (int i = 1; i <= items; i++)
+    {
+        for (int w = 0; w <= max_weight; w++)
+        {
+            if(w - weights[i] >= 0)
+                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - weights[i]] + values[i]);
+            else
+                dp[i][w] = dp[i - 1][w];
+        }
+    }
+    
+    cout << dp[items][max_weight] << el;
 
     return 0;
 }
