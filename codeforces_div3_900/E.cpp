@@ -13,7 +13,7 @@ typedef long long ll;
 using namespace std;
 
 int arr[200005];
-int and_prefix[200005];
+int and_prefix[35][200005];
 
 int main() {
     Akayiz
@@ -30,11 +30,14 @@ int main() {
             cin >> arr[i];
         }
 
-        // and_prefix[1] = arr[1];
-        // for (int i = 2; i <= n; i++)
-        // {
-        //     and_prefix[i] = and_prefix[i - 1] & arr[i];
-        // }
+        for (int b = 0; b < 32; b++)
+        {
+            and_prefix[b][1] = (arr[1] >> b) & 1;
+            for (int j = 2; j <= n; j++)
+            {
+                and_prefix[b][j] = and_prefix[b][j - 1] + ((arr[j] >> b) & 1);
+            }
+        }
         
         cin >> q;
         for (int i = 0; i < q; i++)
@@ -44,14 +47,15 @@ int main() {
                 cout << -1 << " ";
             else
             {
-                int low = l, high = n, mid, ans = l;
+                ll low = l, high = n, mid, ans = l;
                 while(low <= high){
                     mid = (low + high) / 2;
-                    int and_sum = arr[l];
-
-                    for (int i = l + 1; i <= mid; i++)
+                    ll and_sum = 0;
+                    
+                    for (int b = 0; b < 32; b++)
                     {
-                        and_sum &= arr[i];
+                        if(and_prefix[b][mid] - and_prefix[b][l - 1] == mid - l + 1)
+                            and_sum |= (1 << b); 
                     }
 
                     if(and_sum < k)
