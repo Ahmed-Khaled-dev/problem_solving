@@ -1,5 +1,6 @@
 /**
 *    author:  Akayiz
+*    created: 2023-09-29 16:27:06
 **/
 
 #include <bits/stdc++.h>
@@ -11,31 +12,39 @@ typedef long long ll;
 
 using namespace std;
 
-vector<pair<int, ll>> graph[100005];
-vector<ll> min_cost(100005, 1e18);
-vector<int> prev_node(100005);
-bool visited[100005];
+const int N = 1e5 + 5;
+
+// node, weight
+vector<pair<int, int>> graph[N];
+vector<ll> dist(N, 1e18);
+int prev_node[N];
+bool visited[N];
 
 void dijkstra(int node){
-    priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<>> pq; // current_cost, node (top element is smallest current_cost)
-    min_cost[node] = 0;
+    dist[node] = 0;
     prev_node[node] = 0;
-    pq.push({min_cost[node], node});
 
+    // cost, node
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+    pq.push({0, node});
+
+    int cur_cost;
     while(!pq.empty()){
-        ll current_cost = pq.top().first;
+        cur_cost = pq.top().first;
         node = pq.top().second;
         visited[node] = 1;
         pq.pop();
-
-        for (auto child : graph[node]) {
+        
+        if(cur_cost > dist[node])
+            continue;
+        for (auto child : graph[node])
+        {
             if(!visited[child.first])
             {
-                if(current_cost + child.second < min_cost[child.first])
-                {
-                    min_cost[child.first] = current_cost + child.second;
+                if(cur_cost + child.second < dist[child.first]){
+                    dist[child.first] = cur_cost + child.second;
                     prev_node[child.first] = node;
-                    pq.push({min_cost[child.first], child.first});
+                    pq.push({dist[child.first], child.first});
                 }
             }
         }
@@ -45,38 +54,37 @@ void dijkstra(int node){
 int main() {
     Akayiz
 
-    int nodes_count, edges_count;
-    cin >> nodes_count >> edges_count;
+    int nodes, edges;
+    cin >> nodes >> edges;
 
-    int node1, node2;
-    ll weight;
-
-    for (ll i = 0; i < edges_count; ++i) {
+    int node1, node2, weight;
+    for (int i = 0; i < edges; i++)
+    {
         cin >> node1 >> node2 >> weight;
         graph[node1].emplace_back(node2, weight);
         graph[node2].emplace_back(node1, weight);
     }
-
+    
     dijkstra(1);
 
-    //cout << min_cost[nodes_count] << endl;
     vector<int> ans;
-
-    int current_node = nodes_count;
-    while(current_node != 0)
-    {
-        ans.push_back(current_node);
-        current_node = prev_node[current_node];
-    }
-
-    if(ans.size() == 1){
-        cout << -1;
-    }
+    int cur_node;
+    if(prev_node[nodes] == 0)
+        cout << -1 << el;
     else{
+        cur_node = nodes;
+        ans.push_back(cur_node);
+        while(prev_node[cur_node] != 0){
+            ans.push_back(prev_node[cur_node]);
+            cur_node = prev_node[cur_node];
+        }
         reverse(ans.begin(), ans.end());
-        for (auto node : ans) {
+
+        for (auto node : ans)
+        {
             cout << node << " ";
         }
+        
     }
 
     return 0;
